@@ -1,0 +1,20 @@
+CREATE TABLE books (
+id serial primary key,
+author varchar(250),
+title varchar(400),
+release_year int
+);
+
+
+INSERT INTO  books (author,  title, release_year) VALUES ('Mark Twain', 'Hukleberry Finn', 1884);
+INSERT INTO  books (author,  title, release_year) VALUES ('Herbert', 'Dune', 1965);
+INSERT INTO  books (  title, release_year) VALUES ( 'The adventures of Tom  Sawyer', 1876);
+
+select * from books
+where author = 'Mark Twain' and release_year >1880;
+
+
+update books 
+set author = 'test'
+where id = 4;
+delete from books where id = 4;

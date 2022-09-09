@@ -1,0 +1,26 @@
+CREATE TABLE books (
+id serial primary key,
+title varchar(400),
+release_year int,
+author_id int,
+FOREIGN KEY (author_id) REFERENCES author(id)
+);
+
+create table author (
+    id serial primary key,
+    name varchar(100),
+    birth_year int
+);
+select * from author;
+insert into author (name, birth_year) values ('Mark Twain', 1835);
+insert into author (name, birth_year) values ('Frank Herbert', 1920);
+
+insert into books( title, release_year,author_id)( values ('Huckleberry Finn', 1884, 1));
+insert into books( title, release_year,author_id)( values ('The Adventures of Tom sayer Finn', 1876, 1));
+insert into books( title, release_year,author_id)( values ('Dune', 1965,2));
+
+select books.id, books.title, author.id as author_id, author.name from books
+join author on books.author_id = author.id;
+SELECT books.title as Kos, books.id as book_id, author.id as author_id, author.name FROM books
+    Left JOIN author on author.id= books.author_id;
+    select * from books;

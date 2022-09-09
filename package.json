@@ -10,7 +10,9 @@
   "author": "Ali",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.2",
     "ejs": "^3.1.8",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "pg": "^8.8.0"
   }
 }
