@@ -5,11 +5,13 @@ dotenv.config();
 
 const express = require("express");
 const { Pool } = require("pg");
+var cors = require('cors')
 const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.set('views', path.join(__dirname, 'views'))
 app.set("view engine", "ejs");
+app.use(cors())
 const books = [
   {
     author: "Mark Twain",
@@ -105,6 +107,24 @@ app.patch('/api/author/:id', (req, res) => {
       res.send({status: 'updated'})
   })
 })
+app.patch('/api/book/:id', (req, res)=>{
+  const {id} = req.params;
+  const fielsMapping= {
+    title :'title',
+    releaseYear: 'release_year',
+    authorId: 'author_id'
+  }
+  const updates = Object.keys(req.body).map((param)=>{
+    return {
+      field: fielsMapping[param],
+      value:req.body[param]
+    }
+  })
+  patchTable(pool, 'books', updates, id)
+  .then(() => {
+      res.send({status: 'updated'})
+  })
+})
 
 app.post("/api/book", (req, res) => {
   const {author_id, title,release_year}= req.body;
@@ -117,14 +137,34 @@ app.post("/api/book", (req, res) => {
     ;`,
       [author_id, title, release_year]
     )
-    .then((data) => {
-      res.status(201).send(data)
+    .then(() => {
+      res.redirect('/api/book')
+      /* res.status(201).send(data) */
+      
     })
     .catch((e) => {
       res.status(400).send({
         error: e.message
       });
+      
     });
+    
 });
+app.post('/api/author', (req, res) => {
+  console.log(req.body)
+  pool.query(`
+  insert into author (name, birth_year) 
+  values ($1, $2)
+  returning *;
+  `,
+  [req.body.name, req.body.birthYear]
+  )
+  .then((data) => {res.status(201).send(data.rows)})
+  .catch((err) => {
+      res.status(400).send({
+          error: err.message
+      })
+  })
+})
 console.log(process.env.PG_PORT);
 app.listen(port, () => console.log("Connected "));
